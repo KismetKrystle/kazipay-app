@@ -1,13 +1,21 @@
 import React from 'react';
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 import './ClientPage.css';
 
 const ClientPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    navigate('/'); // Navigate to the landing page
+  };
+
   return (
     <div className="client-page-container">
       <Navbar />
       <main className="client-page-content">
         <div className="client-form-card">
+          <button className="client-close-button" onClick={handleClose}>Close</button>
           <input type="text" placeholder="Project Title" className="form-input" />
           <input type="text" placeholder="Full Project Budget" className="form-input" />
           <textarea placeholder="Detailed Project Description" className="form-textarea"></textarea>
