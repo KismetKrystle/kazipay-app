@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => (
       <span>KAZI PAY</span>
     </div>
     <div className="nav-actions">
-      {isLoggedIn && <button className="login-btn">LOGIN</button>}
+      {!isLoggedIn && <button className="login-btn">Connect Wallet</button>}
       <button className="signup-btn" onClick={onSignupClick}>SIGN UP</button>
     </div>
   </header>
