@@ -1,16 +1,22 @@
 import './App.css'
+import { Link } from 'react-router-dom'
+import Navbar from './Navbar'
+import React, { useState } from 'react'
+import SignupModal from './SignupModal'
 
 function App() {
+  const [showSignup, setShowSignup] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  // Handler for signup completion
+  const handleSignupComplete = () => {
+    setIsLoggedIn(true)
+    setShowSignup(false)
+  }
+
   return (
     <div className="landing-root">
-      {/* Header/Navbar */}
-      <header className="navbar">
-        <div className="logo">KAZI PAY</div>
-        <div className="nav-actions">
-          <button className="login-btn">LOGIN</button>
-          <button className="signup-btn">SIGN UP</button>
-        </div>
-      </header>
+      <Navbar onSignupClick={() => setShowSignup(true)} isLoggedIn={isLoggedIn} />
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -83,6 +89,7 @@ function App() {
           </div>
         </div>
       </section>
+      <SignupModal open={showSignup} onClose={() => setShowSignup(false)} onSignupComplete={handleSignupComplete} />
     </div>
   )
 }

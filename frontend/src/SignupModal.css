@@ -1,0 +1,112 @@
+.signup-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  /* Blur background */
+}
+.signup-modal-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(6px);
+  z-index: 1;
+}
+.signup-modal-card {
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 2.5rem 2.5rem 2.2rem 2.5rem;
+  min-width: 340px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.signup-modal-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #b0b0b0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.signup-modal-close:hover {
+  color: #0099b8;
+}
+/* Reuse signup form styles from Signup.css */
+.signup-modal-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+.signup-sub {
+  color: #444;
+  font-size: 1.08rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.signup-input {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border-radius: 2rem;
+  border: none;
+  background: #f7fafd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  outline: none;
+  color: #222;
+}
+.signup-input::placeholder {
+  color: #b0b0b0;
+}
+.signup-roles {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  justify-content: center;
+}
+.signup-roles label {
+  font-size: 1.08rem;
+  color: #222;
+  font-weight: 500;
+  cursor: pointer;
+}
+.signup-continue {
+  width: 100%;
+  background: #b3eaff;
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.9rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+.signup-continue:disabled {
+  background: #e6f6fb;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}
+.signup-continue:not(:disabled):hover {
+  background: #0099b8;
+} 
