@@ -1,146 +1,219 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Client, Wallet, convertStringToHex, isoTimeToRippleTime } from 'xrpl';
-import type { TransactionMetadata, CredentialCreate, CredentialAccept, TransactionMetadataBase } from 'xrpl';
+import { Client, Wallet, convertStringToHex, rippleTimeToISOTime } from 'xrpl';
+import { useWallet } from './WalletContext';
+import type { TransactionMetadataBase, CredentialAccept, LedgerEntryRequest, LedgerEntryResponse, CredentialCreate } from 'xrpl';
 
 interface CredentialContextType {
-  issueAndAcceptCredential: () => Promise<void>;
-  isLoading: boolean;
-  error: string | null;
   isVerified: boolean;
+  isVerifying: boolean;
+  verifyCredential: () => Promise<void>;
+  getDid: () => Promise<void>;
+}
+
+interface CredentialObject {
+  Flags: number;
+  Expiration?: number;
+  CredentialType: string;
+  Issuer: string;
+  Subject: string;
+  [key: string]: any;
 }
 
 const CredentialContext = createContext<CredentialContextType | undefined>(undefined);
 
-// Regex constants for validation
-const CREDENTIAL_REGEX = /^[A-Za-z0-9_.-]{1,128}$/;
-const URI_REGEX = /^[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]{1,256}$/;
-
-// Validate credential request
-function validateCredentialRequest(subject: string, credential: string, uri?: string, expiration?: string) {
-  if (!subject) throw new Error("Subject is required");
-  if (!credential) throw new Error("Credential type is required");
-  return { subject, credential, uri, expiration };
-}
+// Constants
+const ISSUER_SEED = "sEdSXBiF6pNa9VwN9P3G42T3z1S23VF";
+const ISSUER_ADDRESS = "rQpCShQiGGZ4pPN1ySoonnpPNH8WHrMwcz";
+const CREDENTIAL_TYPE = "KYC_VERIFICATION";
 
 export const CredentialProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { wallet } = useWallet();
   const [isVerified, setIsVerified] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  const issueAndAcceptCredential = async () => {
-    setIsLoading(true);
-    setError(null);
-    let client: Client | null = null;
-
+  const verifyCredential = async () => {
+    if (!wallet) return;
+    
+    setIsVerifying(true);
+    const client = new Client("wss://s.devnet.rippletest.net:51233");
+    
     try {
-      console.log('Connecting to XRPL network...');
-      client = new Client("wss://s.devnet.rippletest.net:51233");
       await client.connect();
-      console.log('Connected to XRPL network');
+      console.log("Connected to devnet");
 
-      // Get the locally saved wallet
-      const savedWallet = localStorage.getItem('xrpWallet');
-      if (!savedWallet) {
-        throw new Error('No wallet found in localStorage');
+      // Encode credential type as hex
+      const credentialTypeHex = convertStringToHex(CREDENTIAL_TYPE).toUpperCase();
+      console.log(`Encoded credential type as hex: ${credentialTypeHex}`);
+
+      // Look up the credential using account_objects
+      const response = await client.request({
+        command: "account_objects",
+        account: wallet.classicAddress,
+        type: "credential",
+        ledger_index: "validated"
+      });
+
+      const credentials = (response.result.account_objects || []) as CredentialObject[];
+      console.log("Found credentials:", credentials);
+
+      // Find the matching credential
+      const credential = credentials.find(c => 
+        c.CredentialType === credentialTypeHex && 
+        c.Issuer === ISSUER_ADDRESS
+      );
+
+      if (!credential) {
+        console.log("Credential not found");
+        setIsVerified(false);
+        return;
       }
-      const parsedWallet = JSON.parse(savedWallet);
-      const subjectWallet = Wallet.fromSeed(parsedWallet.seed);
-      console.log('Using locally saved wallet address:', subjectWallet.classicAddress);
 
-      // Create issuer wallet
-      console.log('Creating issuer wallet...');
-      const issuerWallet = Wallet.fromSeed("sEdSXBiF6pNa9VwN9P3G42T3z1S23VF");
-      console.log('Issuer wallet created:', issuerWallet.address);
+      // Check if the credential has been accepted
+      const LSF_ACCEPTED = 0x00010000;
+      if (!(credential.Flags & LSF_ACCEPTED)) {
+        console.log("Credential is not accepted.");
+        setIsVerified(false);
+        return;
+      }
 
-      // Issue credential
-      console.log('Issuing credential...');
-      const tx: CredentialCreate = {
+      // Check if the credential is expired
+      if (credential.Expiration) {
+        const expirationTime = rippleTimeToISOTime(credential.Expiration);
+        console.log(`Credential has expiration: ${expirationTime}`);
+
+        // Get the current ledger time
+        const ledgerResponse = await client.request({
+          command: "ledger",
+          ledger_index: "validated",
+        });
+
+        const closeTime = rippleTimeToISOTime(ledgerResponse.result.ledger.close_time);
+        console.log(`Most recent validated ledger is: ${closeTime}`);
+
+        if (new Date(closeTime) > new Date(expirationTime)) {
+          console.log("Credential is expired.");
+          setIsVerified(false);
+          return;
+        }
+      }
+
+      console.log("Credential is valid.");
+      setIsVerified(true);
+
+    } catch (err: any) {
+      if (err.data?.error === "entryNotFound") {
+        console.log("Credential was not found");
+        setIsVerified(false);
+      } else {
+        console.error("Error:", err);
+        throw err;
+      }
+    } finally {
+      await client.disconnect();
+      setIsVerifying(false);
+    }
+  };
+
+  const getDid = async () => {
+    if (!wallet) return;
+    
+    const client = new Client("wss://s.devnet.rippletest.net:51233");
+    
+    try {
+      await client.connect();
+      console.log("Connected to devnet");
+
+      // Check if subject wallet exists on devnet
+      let subjectWallet = wallet;
+      try {
+        await client.request({
+          command: "account_info",
+          account: wallet.classicAddress,
+          ledger_index: "validated"
+        });
+      } catch (error: any) {
+        if (error.data?.error === "actNotFound") {
+          console.log("Subject wallet does not exist on devnet, creating new wallet...");
+          const fundedWallet = await client.fundWallet();
+          console.log("New wallet created:", fundedWallet);
+          // Create a proper Wallet instance from the funded wallet
+          if (fundedWallet.wallet.seed) {
+            subjectWallet = Wallet.fromSeed(fundedWallet.wallet.seed);
+          } else {
+            throw new Error("Failed to get seed from funded wallet");
+          }
+        } else {
+          throw error;
+        }
+      }
+
+      // Create issuer wallet from seed
+      const issuerWallet = Wallet.fromSeed(ISSUER_SEED);
+      console.log("Issuer wallet:", issuerWallet.classicAddress);
+
+      // Encode credential type as hex
+      const credentialTypeHex = convertStringToHex(CREDENTIAL_TYPE).toUpperCase();
+      console.log(`Encoded credential type as hex: ${credentialTypeHex}`);
+
+      // Prepare the credential request
+      const credentialRequest: CredentialCreate = {
         TransactionType: "CredentialCreate",
-        Account: issuerWallet.address,
+        Account: issuerWallet.classicAddress,
         Subject: subjectWallet.classicAddress,
-        CredentialType: convertStringToHex("VERIFIED_USER").toUpperCase(),
-        URI: convertStringToHex("https://kazipay.com/credentials/verified").toUpperCase(),
-        Expiration: isoTimeToRippleTime(new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString())
+        CredentialType: credentialTypeHex,
+        Flags: 0,
       };
 
-      console.log('Preparing transaction...');
-      const prepared = await client.autofill(tx);
+      // Submit the transaction
+      const prepared = await client.autofill(credentialRequest);
       const signed = issuerWallet.sign(prepared);
       const result = await client.submitAndWait(signed.tx_blob);
 
-      // Check if credential already exists
-      const metadata = result.result.meta as TransactionMetadataBase;
-      if (metadata?.TransactionResult === "tecDUPLICATE") {
-        console.log('Credential already exists, checking if it was accepted...');
-        
-        // Check if the credential was already accepted
-        const acceptTx: CredentialAccept = {
-          TransactionType: "CredentialAccept",
-          Account: subjectWallet.classicAddress,
-          Issuer: issuerWallet.address,
-          CredentialType: convertStringToHex("VERIFIED_USER").toUpperCase()
-        };
+      // Check if the transaction was successful
+      if (result.result.meta) {
+        const metadata = result.result.meta as TransactionMetadataBase;
+        if (metadata.TransactionResult === "tesSUCCESS") {
+          console.log("Credential issued successfully");
+          
+          // Accept the credential
+          const acceptRequest: CredentialAccept = {
+            TransactionType: "CredentialAccept",
+            Account: subjectWallet.classicAddress,
+            Issuer: issuerWallet.classicAddress,
+            CredentialType: credentialTypeHex,
+          };
 
-        try {
-          const acceptPrepared = await client.autofill(acceptTx);
+          const acceptPrepared = await client.autofill(acceptRequest);
           const acceptSigned = subjectWallet.sign(acceptPrepared);
           const acceptResult = await client.submitAndWait(acceptSigned.tx_blob);
-          
-          const acceptMetadata = acceptResult.result.meta as TransactionMetadataBase;
-          if (acceptMetadata?.TransactionResult === "tecDUPLICATE") {
-            console.log('Credential was already accepted');
-            setIsVerified(true);
-            return;
+
+          if (acceptResult.result.meta) {
+            const acceptMetadata = acceptResult.result.meta as TransactionMetadataBase;
+            if (acceptMetadata.TransactionResult === "tesSUCCESS") {
+              console.log("Credential accepted successfully");
+              // Verify the credential after acceptance
+              await verifyCredential();
+            } else {
+              console.error("Failed to accept credential:", acceptMetadata.TransactionResult);
+            }
           }
-        } catch (error) {
-          console.log('Credential exists but not accepted, proceeding with acceptance...');
+        } else if (metadata.TransactionResult === "tecDUPLICATE") {
+          console.log("Credential already exists, checking if accepted...");
+          // Verify the credential to check if it's accepted
+          await verifyCredential();
+        } else {
+          console.error("Failed to issue credential:", metadata.TransactionResult);
         }
-      } else if (metadata?.TransactionResult !== "tesSUCCESS") {
-        throw new Error(`Transaction failed: ${metadata?.TransactionResult}`);
       }
-      console.log('Credential issued successfully');
-
-      // Accept credential
-      console.log('Accepting credential...');
-      const acceptTx: CredentialAccept = {
-        TransactionType: "CredentialAccept",
-        Account: subjectWallet.classicAddress,
-        Issuer: issuerWallet.address,
-        CredentialType: convertStringToHex("VERIFIED_USER").toUpperCase()
-      };
-
-      console.log('Preparing accept transaction...');
-      const acceptPrepared = await client.autofill(acceptTx);
-      const acceptSigned = subjectWallet.sign(acceptPrepared);
-      const acceptResult = await client.submitAndWait(acceptSigned.tx_blob);
-
-      const acceptMetadata = acceptResult.result.meta as TransactionMetadataBase;
-      if (acceptMetadata?.TransactionResult === "tecDUPLICATE") {
-        console.log('Credential was already accepted');
-      } else if (acceptMetadata?.TransactionResult !== "tesSUCCESS") {
-        throw new Error(`Accept transaction failed: ${acceptMetadata?.TransactionResult}`);
-      } else {
-        console.log('Credential accepted successfully');
-      }
-
-      // Set verified status
-      setIsVerified(true);
-      console.log('Verification complete!');
-
     } catch (error) {
-      console.error('Error:', error);
-      setError(error instanceof Error ? error.message : 'Failed to verify credential');
-      throw error;
+      console.error("Error:", error);
     } finally {
-      if (client?.isConnected()) {
-        await client.disconnect();
-      }
-      setIsLoading(false);
+      await client.disconnect();
     }
   };
 
   return (
-    <CredentialContext.Provider value={{ issueAndAcceptCredential, isLoading, error, isVerified }}>
+    <CredentialContext.Provider value={{ isVerified, isVerifying, verifyCredential, getDid }}>
       {children}
     </CredentialContext.Provider>
   );

@@ -20,9 +20,8 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
   } = useWallet();
 
   const {
-    issueAndAcceptCredential,
-    isLoading: isCredentialLoading,
-    error: credentialError,
+    getDid,
+    isVerifying,
     isVerified
   } = useCredential();
 
@@ -49,10 +48,16 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
     if (!wallet) return;
     
     try {
-      await issueAndAcceptCredential();
+      await getDid();
     } catch (error) {
       console.error('Failed to get DID:', error);
     }
+  };
+
+  const getWalletDisplay = () => {
+    if (isWalletLoading) return 'Connecting...';
+    if (!isConnected || !wallet?.classicAddress) return 'Connect Wallet';
+    return `Wallet (${wallet.classicAddress.slice(0, 6)}...)`;
   };
 
   return (
@@ -73,17 +78,15 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
             onClick={handleWalletClick}
             disabled={isWalletLoading}
           >
-            {isWalletLoading ? 'Connecting...' : 
-             isConnected ? `Wallet (${wallet?.classicAddress.slice(0, 6)}...)` : 
-             'Connect Wallet'}
+            {getWalletDisplay()}
           </button>
-          {isConnected && showWalletDetails && (
+          {isConnected && wallet && showWalletDetails && (
             <div className="wallet-dropdown">
               <div className="wallet-dropdown-content">
                 <div className="wallet-info-section">
                   <h4>Wallet Details</h4>
-                  <p><strong>Address:</strong> {wallet?.classicAddress}</p>
-                  <p><strong>Seed:</strong> {wallet?.seed}</p>
+                  <p><strong>Address:</strong> {wallet.classicAddress}</p>
+                  <p><strong>Seed:</strong> {wallet.seed}</p>
                   <p><strong>Balance:</strong> {balance ? `${Number(balance) / 1000000} XRP` : 'Loading...'}</p>
                   {isVerified && (
                     <div className="verified-badge">
@@ -98,9 +101,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
                   <button 
                     className="get-did-btn"
                     onClick={handleGetDID}
-                    disabled={isCredentialLoading}
+                    disabled={isVerifying}
                   >
-                    {isCredentialLoading ? 'Getting DID...' : 'Get DID'}
+                    {isVerifying ? 'Verifying...' : 'Get DID'}
                   </button>
                 )}
                 <button className="disconnect-btn" onClick={handleDisconnect}>
@@ -110,9 +113,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
             </div>
           )}
         </div>
-        {(walletError || credentialError) && (
+        {walletError && (
           <div className="wallet-error">
-            {walletError || credentialError}
+            {walletError}
           </div>
         )}
         {!isLoggedIn && <button className="signup-btn" onClick={onSignupClick}>SIGN UP</button>}

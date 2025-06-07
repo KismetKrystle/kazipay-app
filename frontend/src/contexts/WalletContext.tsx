@@ -25,7 +25,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const initializeClient = async () => {
       try {
         console.log('Initializing XRPL client...');
-        const xrplClient = new Client("wss://s.altnet.rippletest.net");
+        const xrplClient = new Client("wss://s.devnet.rippletest.net:51233");
         await xrplClient.connect();
         console.log('XRPL client connected successfully');
         setClient(xrplClient);
@@ -36,9 +36,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           try {
             console.log('Loading saved wallet...');
             const parsedWallet = JSON.parse(savedWallet);
-            setWallet(parsedWallet);
+            const walletInstance = Wallet.fromSeed(parsedWallet.seed);
+            setWallet(walletInstance);
             setIsConnected(true);
             console.log('Saved wallet loaded successfully');
+
+            // Get balance for saved wallet
+            const response = await xrplClient.request({
+              command: "account_info",
+              account: walletInstance.classicAddress,
+              ledger_index: "validated"
+            });
+            setBalance(response.result.account_data.Balance);
           } catch (error) {
             console.error('Error loading saved wallet:', error);
             localStorage.removeItem('xrpWallet');
@@ -78,12 +87,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       console.log('Creating and funding new wallet...');
       const { wallet: newWallet } = await client.fundWallet();
-      console.log('Wallet created and funded successfully');
+      console.log('Wallet created and funded successfully:', newWallet);
       
       // Save wallet to state and localStorage
       setWallet(newWallet);
       setIsConnected(true);
-      localStorage.setItem('xrpWallet', JSON.stringify(newWallet));
+      localStorage.setItem('xrpWallet', JSON.stringify({
+        seed: newWallet.seed,
+        classicAddress: newWallet.classicAddress
+      }));
 
       // Get initial balance
       console.log('Fetching wallet balance...');
@@ -94,7 +106,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
 
       setBalance(response.result.account_data.Balance);
-      console.log('Wallet balance fetched successfully');
+      console.log('Wallet balance fetched successfully:', response.result.account_data.Balance);
     } catch (error) {
       console.error('Error connecting wallet:', error);
       setError(error instanceof Error ? error.message : 'Failed to connect wallet');
