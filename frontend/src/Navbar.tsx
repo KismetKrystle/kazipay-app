@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Navbar.css';
 import { useWallet } from './contexts/WalletContext';
 import { useCredential } from './contexts/CredentialContext';
+import CreditScoreDisplay from './components/CreditScoreDisplay';
+import './components/CreditScoreDisplay.css';
 
 type NavbarProps = {
   onSignupClick?: () => void;
@@ -72,7 +74,8 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
         <span>KAZI PAY</span>
       </div>
       <div className="nav-actions">
-        <div className="wallet-container">
+        <div className="wallet-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <CreditScoreDisplay />
           <button 
             className={`login-btn ${isWalletLoading ? 'loading' : ''}`}
             onClick={handleWalletClick}
