@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
+import WalletInfo from './components/WalletInfo';
 import './DashboardPage.css';
 
 const DashboardPage: React.FC = () => {
@@ -20,6 +21,7 @@ const DashboardPage: React.FC = () => {
           </nav>
         </aside>
         <main className="dashboard-content-area">
+          <WalletInfo />
           <div className="dashboard-grid">
             {/* User Profile Card */}
             <div className="card user-profile-card">
