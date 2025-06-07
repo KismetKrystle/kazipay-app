@@ -1,3 +1,8 @@
+.App {
+  text-align: center;
+  padding: 2rem;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +44,214 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Reset and base styles */
+.landing-root {
+  font-family: 'Inter', system-ui, sans-serif;
+  /* background: #b3eaff; */
+  min-height: 100vh;
+  margin: 0;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #e6f6fb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-radius: 0.75rem;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+.nav-actions {
+  display: flex;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+}
+.login-btn, .signup-btn {
+  font-size: 1.08rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.7rem 2.5rem;
+  cursor: pointer;
+  background: #8ee3fb;
+  color: #111;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.login-btn:hover, .signup-btn:hover {
+  background: #0099b8;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,153,184,0.10);
+}
+
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #8ee3fb;
+  border-radius: 2.2rem;
+  margin: 2rem 1.2rem 0 1.2rem;
+  padding: 3rem 3rem 2.5rem 3rem;
+  min-height: 320px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+.hero-content {
+  max-width: 520px;
+}
+.hero-content h1, .subtitle {
+  text-align: left;
+}
+.hero-content h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  line-height: 1.1;
+}
+.subtitle {
+  font-size: 1.1rem;
+  color: #222;
+  margin-bottom: 2rem;
+}
+.hero-actions {
+  display: flex;
+  gap: 1.2rem;
+}
+.primary-btn, .secondary-btn {
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  background: #fff;
+  color: #222;
+  border: 2px solid #e0e0e0;
+}
+.primary-btn:hover, .secondary-btn:hover {
+  background: #e0f7fa;
+}
+.hero-logo {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.stats-section {
+  display: flex;
+  gap: 2rem;
+  margin: 2.5rem 1.2rem 0 1.2rem;
+  justify-content: space-between;
+}
+.stat-card {
+  background: #8ee3fb;
+  border-radius: 1.5rem;
+  padding: 1.5rem 2rem;
+  min-width: 200px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  position: relative;
+}
+.stat-label {
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+.stat-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+.stat-avatars {
+  display: flex;
+  gap: -0.5rem;
+  margin-top: 0.2rem;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: inline-block;
+  margin-left: -10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.stat-icon {
+  font-size: 2rem;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .hero-section, .stats-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+  }
+  .hero-logo {
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .stats-section {
+    gap: 1rem;
+  }
+}
+
+.trusted-section {
+  margin: 2.5rem 0 0 0;
+  padding: 0 0 1.5rem 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.trusted-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  margin-left: 0;
+  margin-bottom: 0.7rem;
+  width: 100%;
+  text-align: center;
+}
+.trusted-marquee {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: none;
+}
+.trusted-track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 18s linear infinite;
+  white-space: nowrap;
+}
+.trusted-company {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0099b8;
+  background: #e6f6fb;
+  border-radius: 1rem;
+  padding: 0.5rem 2rem;
+  margin: 0 0.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  display: inline-block;
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
