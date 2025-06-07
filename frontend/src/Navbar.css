@@ -116,6 +116,25 @@
 .wallet-warning p {
   margin: 0;
 }
+.issue-credential-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  margin-bottom: 0.5rem;
+}
+.issue-credential-btn:hover {
+  background: #218838;
+}
+.issue-credential-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 .disconnect-btn {
   width: 100%;
   padding: 0.5rem;
@@ -140,4 +159,37 @@
   to {
     transform: rotate(1turn);
   }
+}
+.verified-badge {
+  background: #28a745;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  display: inline-block;
+}
+.verified-badge span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.get-did-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  margin-bottom: 0.5rem;
+}
+.get-did-btn:hover {
+  background: #138496;
+}
+.get-did-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 } 
