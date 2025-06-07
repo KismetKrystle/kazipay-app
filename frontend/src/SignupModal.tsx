@@ -4,18 +4,18 @@ import './SignupModal.css';
 type SignupModalProps = {
   open: boolean;
   onClose: () => void;
-  onSignupComplete?: () => void;
+  onSignupComplete?: (role: 'freelancer' | 'client') => void;
 };
 
 const SignupModal: React.FC<SignupModalProps> = ({ open, onClose, onSignupComplete }) => {
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState<'freelancer' | 'client' | ''>('');
 
   if (!open) return null;
 
   const handleContinue = () => {
     if (email && role && onSignupComplete) {
-      onSignupComplete();
+      onSignupComplete(role);
     }
   };
 

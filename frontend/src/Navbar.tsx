@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import './Navbar.css';
+
+import { Link, useLocation } from 'react-router-dom';
 import { useWallet } from './contexts/WalletContext';
 import { useCredential } from './contexts/CredentialContext';
 import CreditScoreDisplay from './components/CreditScoreDisplay';
 import './components/CreditScoreDisplay.css';
 
+
 type NavbarProps = {
-  onSignupClick?: () => void;
-  isLoggedIn?: boolean;
+  onSignupClick: () => void;
+  userRole: 'freelancer' | 'client' | null;
 };
+
+const Navbar: React.FC<NavbarProps> = ({ onSignupClick, userRole }) => {
+  const location = useLocation();
+  const isProjectsPage = location.pathname === '/projects';
 
 const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
   const { 
@@ -62,6 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
     return `Wallet (${wallet.classicAddress.slice(0, 6)}...)`;
   };
 
+
   return (
     <header className="navbar">
       <div className="logo">
@@ -74,6 +82,26 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, isLoggedIn }) => {
         <span>KAZI PAY</span>
       </div>
       <div className="nav-actions">
+        {userRole === null ? (
+          <>
+            <button className="login-btn">LOGIN</button>
+            <button className="signup-btn" onClick={onSignupClick}>SIGN UP</button>
+          </>
+        ) : userRole === 'freelancer' ? (
+          isProjectsPage ? (
+            <Link to="/projects" className="signup-btn-link">
+              <button className="signup-btn">My Projects</button>
+            </Link>
+          ) : (
+            <Link to="/dashboard" className="signup-btn-link">
+              <button className="signup-btn">Profile</button>
+            </Link>
+          )
+        ) : (
+          <Link to="/client" className="signup-btn-link">
+            <button className="signup-btn">Create Project</button>
+          </Link>
+        )}
         <div className="wallet-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <CreditScoreDisplay />
           <button 
