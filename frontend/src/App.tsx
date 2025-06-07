@@ -1,8 +1,8 @@
 import './App.css'
-import { Link } from 'react-router-dom'
 import Navbar from './Navbar'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import SignupModal from './SignupModal'
+import { Link } from 'react-router-dom'
 
 function App() {
   const [showSignup, setShowSignup] = useState(false)
@@ -26,7 +26,9 @@ function App() {
             Building trust in remote work. Milestone based crypto payouts for global freelancers powered by XRP Ledger.
           </p>
           <div className="hero-actions">
-            <button className="primary-btn">FREELANCER</button>
+            <Link to="/dashboard" className="primary-btn-link">
+              <button className="primary-btn">FREELANCER</button>
+            </Link>
             <button className="secondary-btn">CLIENT</button>
           </div>
         </div>
