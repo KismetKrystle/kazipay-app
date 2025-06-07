@@ -6,17 +6,17 @@ import { Link } from 'react-router-dom'
 
 function App() {
   const [showSignup, setShowSignup] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userRole, setUserRole] = useState<'freelancer' | 'client' | null>(null)
 
   // Handler for signup completion
-  const handleSignupComplete = () => {
-    setIsLoggedIn(true)
+  const handleSignupComplete = (role: 'freelancer' | 'client') => {
+    setUserRole(role)
     setShowSignup(false)
   }
 
   return (
     <div className="landing-root">
-      <Navbar onSignupClick={() => setShowSignup(true)} isLoggedIn={isLoggedIn} />
+      <Navbar onSignupClick={() => setShowSignup(true)} userRole={userRole} />
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -26,12 +26,26 @@ function App() {
             Building trust in remote work. Milestone based crypto payouts for global freelancers powered by XRP Ledger.
           </p>
           <div className="hero-actions">
-            <Link to="/dashboard" className="primary-btn-link">
-              <button className="primary-btn">FREELANCER</button>
-            </Link>
-            <Link to="/client" className="secondary-btn-link">
-              <button className="secondary-btn">CLIENT</button>
-            </Link>
+            {userRole === null && (
+              <>
+                <Link to="/dashboard" className="primary-btn-link">
+                  <button className="primary-btn">FREELANCER</button>
+                </Link>
+                <Link to="/client" className="secondary-btn-link">
+                  <button className="secondary-btn">CLIENT</button>
+                </Link>
+              </>
+            )}
+            {userRole === 'freelancer' && (
+              <Link to="/dashboard" state={{ userRole }} className="primary-btn-link">
+                <button className="primary-btn">View Projects</button>
+              </Link>
+            )}
+            {userRole === 'client' && (
+              <Link to="/client" className="primary-btn-link">
+                <button className="primary-btn">Create Project</button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="hero-logo">

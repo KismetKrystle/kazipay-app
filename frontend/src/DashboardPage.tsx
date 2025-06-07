@@ -6,16 +6,12 @@ import './DashboardPage.css';
 const DashboardPage: React.FC = () => {
   return (
     <div className="dashboard-container">
-      <Navbar />
+      <Navbar onSignupClick={() => {}} userRole="freelancer" />
       <div className="dashboard-main-content">
         <aside className="dashboard-sidebar">
-          <div className="sidebar-logo">
-            <span>Kazi Pay</span>
-          </div>
           <nav className="sidebar-nav">
             <Link to="/" className="nav-item active">Home</Link>
-            <a href="#projects" className="nav-item">Projects</a>
-            <a href="#wallet" className="nav-item">Wallet</a>
+            <Link to="/projects" className="nav-item">My Projects</Link>
             <a href="#settings" className="nav-item">Settings</a>
           </nav>
         </aside>

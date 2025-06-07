@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './ClientPage.css';
 
 const ClientPage: React.FC = () => {
   const navigate = useNavigate();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleClose = () => {
     navigate('/'); // Navigate to the landing page
@@ -35,7 +39,29 @@ const ClientPage: React.FC = () => {
           </div>
 
           <h3 className="section-title">Project Timeline</h3>
-          <input type="text" placeholder="dd/mm/yy" className="form-input" />
+          <div className="date-picker-group">
+            <DatePicker
+              selected={startDate ?? undefined}
+              onChange={setStartDate}
+              selectsStart
+              startDate={startDate ?? undefined}
+              endDate={endDate ?? undefined}
+              placeholderText="Start Date"
+              className="form-input date-input"
+              isClearable
+            />
+            <DatePicker
+              selected={endDate ?? undefined}
+              onChange={setEndDate}
+              selectsEnd
+              startDate={startDate ?? undefined}
+              endDate={endDate ?? undefined}
+              minDate={startDate ?? undefined}
+              placeholderText="End Date"
+              className="form-input date-input"
+              isClearable
+            />
+          </div>
 
           <button className="fund-escrow-btn">Fund Escrow</button>
         </div>
