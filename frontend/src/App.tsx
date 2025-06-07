@@ -29,7 +29,9 @@ function App() {
             <Link to="/dashboard" className="primary-btn-link">
               <button className="primary-btn">FREELANCER</button>
             </Link>
-            <button className="secondary-btn">CLIENT</button>
+            <Link to="/client" className="secondary-btn-link">
+              <button className="secondary-btn">CLIENT</button>
+            </Link>
           </div>
         </div>
         <div className="hero-logo">
