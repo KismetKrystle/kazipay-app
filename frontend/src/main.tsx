@@ -5,7 +5,11 @@ import App from './App'
 import Signup from './Signup'
 import DashboardPage from './DashboardPage'
 import ClientPage from './ClientPage'
+
 import ProjectsPage from './ProjectsPage'
+import { WalletProvider } from './contexts/WalletContext'
+import { CredentialProvider } from './contexts/CredentialContext'
+
 import './index.css'
 
 // Wrapper component to access location state
@@ -33,5 +37,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/projects" element={<ProjectsWrapper />} />
       </Routes>
     </BrowserRouter>
+    <WalletProvider>
+      <CredentialProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/client" element={<ClientPage />} />
+          </Routes>
+        </BrowserRouter>
+      </CredentialProvider>
+    </WalletProvider>
   </React.StrictMode>
 )
