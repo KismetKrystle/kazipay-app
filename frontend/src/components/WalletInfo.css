@@ -1,0 +1,40 @@
+.wallet-info {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  max-width: 600px;
+}
+
+.wallet-info h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.wallet-details {
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.wallet-details p {
+  margin: 0.5rem 0;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.wallet-warning {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.wallet-warning p {
+  margin: 0;
+} 
