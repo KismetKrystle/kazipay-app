@@ -3,10 +3,14 @@ import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import './ProjectsPage.css';
 
-const ProjectsPage: React.FC = () => {
+type ProjectsPageProps = {
+  userRole: 'freelancer' | 'client' | null;
+};
+
+const ProjectsPage: React.FC<ProjectsPageProps> = ({ userRole }) => {
   return (
     <div className="projects-container">
-      <Navbar onSignupClick={() => {}} userRole="freelancer" />
+      <Navbar onSignupClick={() => {}} userRole={userRole} />
       <div className="projects-main-content">
         <aside className="projects-sidebar">
           <nav className="sidebar-nav">

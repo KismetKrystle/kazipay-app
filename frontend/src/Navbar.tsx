@@ -1,15 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
-import { Link, useLocation } from 'react-router-dom';
+import { useWallet } from './contexts/WalletContext';
+import { useCredential } from './contexts/CredentialContext';
+import CreditScoreDisplay from './components/CreditScoreDisplay';
+import './components/CreditScoreDisplay.css';
 
 type NavbarProps = {
   onSignupClick: () => void;
-  userRole: 'freelancer' | 'client' | null;
+  userRole?: 'freelancer' | 'client' | null;
 };
 
 const Navbar: React.FC<NavbarProps> = ({ onSignupClick, userRole }) => {
-  const location = useLocation();
-  const isProjectsPage = location.pathname === '/projects';
+  const { 
+    isConnected, 
+    connectWallet, 
+    disconnectWallet, 
+    wallet, 
+    balance,
+    error: walletError,
+    isLoading: isWalletLoading 
+  } = useWallet();
+
+  const {
+    getDid,
+    isVerifying,
+    isVerified
+  } = useCredential();
+
+  const [showWalletDetails, setShowWalletDetails] = useState(false);
+
+  const handleWalletClick = async () => {
+    if (isConnected) {
+      setShowWalletDetails(!showWalletDetails);
+    } else {
+      try {
+        await connectWallet();
+      } catch (error) {
+        console.error('Failed to connect wallet:', error);
+      }
+    }
+  };
+
+  const handleDisconnect = () => {
+    disconnectWallet();
+    setShowWalletDetails(false);
+  };
+
+  const handleGetDID = async () => {
+    if (!wallet) return;
+    
+    try {
+      await getDid();
+    } catch (error) {
+      console.error('Failed to get DID:', error);
+    }
+  };
+
+  const getWalletDisplay = () => {
+    if (isWalletLoading) return 'Connecting...';
+    if (!isConnected || !wallet?.classicAddress) return 'Connect Wallet';
+    return `Wallet (${wallet.classicAddress.slice(0, 6)}...)`;
+  };
 
   return (
     <header className="navbar">
@@ -23,26 +74,54 @@ const Navbar: React.FC<NavbarProps> = ({ onSignupClick, userRole }) => {
         <span>KAZI PAY</span>
       </div>
       <div className="nav-actions">
-        {userRole === null ? (
-          <>
-            <button className="login-btn">LOGIN</button>
-            <button className="signup-btn" onClick={onSignupClick}>SIGN UP</button>
-          </>
-        ) : userRole === 'freelancer' ? (
-          isProjectsPage ? (
-            <Link to="/projects" className="signup-btn-link">
-              <button className="signup-btn">My Projects</button>
-            </Link>
-          ) : (
-            <Link to="/dashboard" className="signup-btn-link">
-              <button className="signup-btn">Profile</button>
-            </Link>
-          )
-        ) : (
-          <Link to="/client" className="signup-btn-link">
-            <button className="signup-btn">Create Project</button>
-          </Link>
+        <div className="wallet-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <CreditScoreDisplay />
+          <button 
+            className={`login-btn ${isWalletLoading ? 'loading' : ''}`}
+            onClick={handleWalletClick}
+            disabled={isWalletLoading}
+          >
+            {getWalletDisplay()}
+          </button>
+          {isConnected && wallet && showWalletDetails && (
+            <div className="wallet-dropdown">
+              <div className="wallet-dropdown-content">
+                <div className="wallet-info-section">
+                  <h4>Wallet Details</h4>
+                  <p><strong>Address:</strong> {wallet.classicAddress}</p>
+                  <p><strong>Seed:</strong> {wallet.seed}</p>
+                  <p><strong>Balance:</strong> {balance ? `${Number(balance) / 1000000} XRP` : 'Loading...'}</p>
+                  {isVerified && (
+                    <div className="verified-badge">
+                      <span>✓ Verified</span>
+                    </div>
+                  )}
+                </div>
+                <div className="wallet-warning">
+                  <p>⚠️ Save your seed phrase securely!</p>
+                </div>
+                {!isVerified && (
+                  <button 
+                    className="get-did-btn"
+                    onClick={handleGetDID}
+                    disabled={isVerifying}
+                  >
+                    {isVerifying ? 'Verifying...' : 'Get DID'}
+                  </button>
+                )}
+                <button className="disconnect-btn" onClick={handleDisconnect}>
+                  Disconnect Wallet
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        {walletError && (
+          <div className="wallet-error">
+            {walletError}
+          </div>
         )}
+        {!userRole && <button className="signup-btn" onClick={onSignupClick}>SIGN UP</button>}
       </div>
     </header>
   );

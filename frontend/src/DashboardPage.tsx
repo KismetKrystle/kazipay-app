@@ -1,9 +1,14 @@
 import React, { useRef, useState } from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
+import WalletInfo from './components/WalletInfo';
 import './DashboardPage.css';
 
-const DashboardPage: React.FC = () => {
+type DashboardPageProps = {
+  userRole: 'freelancer' | 'client' | null;
+};
+
+const DashboardPage: React.FC<DashboardPageProps> = ({ userRole }) => {
   const [profileImage, setProfileImage] = useState("https://via.placeholder.com/64");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +29,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="dashboard-container">
-      <Navbar onSignupClick={() => {}} userRole="freelancer" />
+      <Navbar onSignupClick={() => {}} userRole={userRole} />
       <div className="dashboard-main-content">
         <aside className="dashboard-sidebar">
           <nav className="sidebar-nav">
@@ -34,6 +39,7 @@ const DashboardPage: React.FC = () => {
           </nav>
         </aside>
         <main className="dashboard-content-area">
+          <WalletInfo />
           <div className="dashboard-grid">
             {/* User Profile Card */}
             <div className="card user-profile-card">
