@@ -9,12 +9,11 @@
 ## 🌟 Key Features
 
 - 🔐 **Secure Wallet Integration** - Connect XRP wallets with robust authentication
-- 📋 **Milestone-Based Escrow** - Smart contract-powered project funding with automatic release
-- 🧠 **Intelligent Trust Scoring** - Credit evaluation based on XRPL transaction history
+- 📋 **Milestone-Based Escrow** - Smart contract-powered project funding with automatic release when approved by both parties
+- 🧠 **Intelligent Trust Scoring** - Credit evaluation based on XRPL transaction history and completed projects
 - 👥 **Dual Role Dashboards** - Separate interfaces for clients and freelancers
 - ⚡ **Real-time Transactions** - Fast, low-fee payments via XRP Ledger
 - 🏆 **NFT Rewards** - Users receive [DID/NFTs] when reaching 750+ credit score
-- 🔄 **Auto-Release Logic** - Automated milestone completion for inactive reviews
 
 ## 🛠️ Technology Stack
 
