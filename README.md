@@ -188,7 +188,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **Live Demo**:[Live Demo](https://drive.google.com/file/d/1bXEEIqIC6WDIceC9iibwSoy8XLQJEDiI/view?usp=drive_link)
+- **Live Demo**:[Live Demo](https://drive.google.com/file/d/1bXEEIqIC6WDIceC9iibwSoy8XLQJEDiI/view?usp=sharing)
 - **Documentation**: [Wiki](../../wiki)
 - **Issues**: [GitHub Issues](../../issues)
 - **Discussions**: [GitHub Discussions](../../discussions)
