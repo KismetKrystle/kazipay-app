@@ -13,7 +13,7 @@
 - 🧠 **Intelligent Trust Scoring** - Credit evaluation based on XRPL transaction history
 - 👥 **Dual Role Dashboards** - Separate interfaces for clients and freelancers
 - ⚡ **Real-time Transactions** - Fast, low-fee payments via XRP Ledger
-- 🏆 **NFT Rewards** - Users receive NFTs when reaching 750+ credit score
+- 🏆 **NFT Rewards** - Users receive [DID/NFTs] when reaching 750+ credit score
 - 🔄 **Auto-Release Logic** - Automated milestone completion for inactive reviews
 
 ## 🛠️ Technology Stack
