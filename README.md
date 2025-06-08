@@ -4,7 +4,10 @@
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB?logo=react)](https://reactjs.org/)
 [![Powered by XRPL](https://img.shields.io/badge/Powered%20by-XRPL-000000?logo=ripple)](https://xrpl.org/)
 
-**KaziPay** is a decentralized payment platform that revolutionizes freelance transactions through milestone-based escrow contracts and intelligent trust scoring - all built on the XRP Ledger. Designed for the Global South, KaziPay bridges the gap between international clients and emerging-market talent with secure, low-fee payments.
+**KaziPay** is a decentralized payment platform that revolutionizes freelance transactions through milestone-based escrow contracts, build on-chain reputation, borderless payouts in XRP and intelligent trust scoring - all built on the XRP Ledger. Designed for the Global South, KaziPay bridges the gap between international clients and emerging-market talent with secure, low-fee payments.
+
+“Fair Work. Fast Pay. Borderless Freedom.”
+
 
 ## 🌟 Key Features
 
