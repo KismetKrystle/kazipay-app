@@ -16,7 +16,7 @@ const ClientPage: React.FC = () => {
 
   return (
     <div className="client-page-container">
-      <Navbar />
+      <Navbar onSignupClick={() => {}} />
       <main className="client-page-content">
         <div className="client-form-card">
           <button className="client-close-button" onClick={handleClose}>Close</button>

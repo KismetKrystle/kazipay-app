@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Client, Wallet, convertStringToHex, rippleTimeToISOTime } from 'xrpl';
 import { useWallet } from './WalletContext';
-import type { TransactionMetadataBase, CredentialAccept, LedgerEntryRequest, LedgerEntryResponse, CredentialCreate } from 'xrpl';
+import type { TransactionMetadataBase, CredentialAccept, CredentialCreate } from 'xrpl';
 
 interface CredentialContextType {
   isVerified: boolean;

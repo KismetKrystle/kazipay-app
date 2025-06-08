@@ -8,7 +8,7 @@ const Signup: React.FC = () => {
 
   return (
     <div className="signup-bg">
-      <Navbar />
+      <Navbar onSignupClick={() => {}} />
       <div className="signup-center">
         <div className="signup-card">
           <h2>Welcome to KAZI PAY</h2>
