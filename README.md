@@ -161,14 +161,14 @@ Additional contract features:
 
 Built with ❤️ by the KaziPay development team:
 
-- **Frontend Development** - React, UI/UX, Component Design, XRPL Integration |
+- **Product Owner & UX/UI Designer** - Product Strategy, UX/UI, Ideation |
+- https://github.com/AprilSevenWalker | https://x.com/April7Walker
+- **Frontend Development** - React, Component Design, XRPL Integration |
 - https://github.com/IjayAbby | https://x.com/Ijay_js
 - **Backend Development** - Database, Authentication |
 - https://github.com/sonalibiswal02 | https://x.com/SonaaaaSpam
 - **Smart Contract Development** - XRPL Integration, Escrow Logic, MPT[DID+NFT], Wallet Integration |
 - https://github.com/uniiquecornnx | https://x.com/april7walker
-- **Strategy & Documentation** - Product Strategy, Technical Writing, Ideation |
-- https://github.com/AprilSevenWalker |
 - **Product Manager & Architecture** - Smart Contract Logic, Strategy, System and Setup|
 - https://github.com/KismetKrystle | https://x.com/kismetkrystle
 
