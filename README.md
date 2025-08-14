@@ -187,7 +187,10 @@ We welcome contributions! Please feel free to submit a Pull Request. For major c
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
+CURRENT MVP 
+- **Live Demo New App Design PAY KAZI**: MOBILE APP VIEW: https://www.figma.com/make/PZKskNdPgp5Y1T5GNhK1Gg/PayKazi-Mobile-Web3-Freelance-Platform?fullscreen=1
 
+HACKATHON
 - **Live Demo**:[Live Demo](https://drive.google.com/file/d/1bXEEIqIC6WDIceC9iibwSoy8XLQJEDiI/view?usp=sharing)
 - **Documentation**: [Wiki](../../wiki)
 - **Issues**: [GitHub Issues](../../issues)
